@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RPG!</title>
+	  <script src="https://code.jquery.com/jquery.js"></script>
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	  <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+
+	<style type="text/css">
+		.cha1bg {
+			background: url(rpgimg/char1.png) top center no-repeat;	
+		}
+		.cha2bg {
+			background: url(rpgimg/char2.png) top center no-repeat;		
+		}
+		.cha3bg {
+			background: url(rpgimg/char3.png) top center no-repeat;	
+		}
+		.cha4bg {
+			background: url(rpgimg/char4.png) top center no-repeat;			
+		}
+		.cha1bg, .cha2bg, .cha3bg, .cha4bg {
+			width: 100%;
+			height: 250px;
+			background-size: contain;	
+		}
+		.hp, .plycharHp, .enemyHp {
+			float: bottom;
+			border: solid skyblue;
+			border-radius: 10px;
+			color: orange;
+			position: relative;
+			bottom: -10px;
+			background-color: white;
+			padding: 3px 10px;
+			text-align: center;
+		}
+		.chaName {
+			color: black;
+			position: relative;
+			top: -10px;
+			text-align: center;
+		}
+		#char1, #char2, #char3, #char4 {
+			border: solid black;
+			border-radius: 10px;
+			padding: 25px;
+		}
+
+		body {
+			font-family: 'Russo One', sans-serif;
+		}
+
+	</style>
+
+</head>
+<body>
+
+
+<div class="container">
+
+<h1>RPG</h1>
+<div class="row">
+<h2 id="insT" class="col-lg-12">Click on the desired character to fight others with!</h2>
+<h3 class="dmgText col-lg-12"></h3>
+</div>
+
+
+
+<div class="row">
+	<div id="allCh">
+		<div id="char1ct">
+			<div id="char1" class="col-lg-3">
+				<div class="chaName">Krik-krak</div>
+				<button type="button" id="ch1"  class="btn btn-default cha1bg"></button>
+				<div class="hp" id="hp1">HP</div>
+			</div>
+		</div>
+		<div id="char2ct">
+			<div id="char2" class="col-lg-3">
+				<div class="chaName">Nova</div>
+				<button type="button" id="ch2"  class="btn btn-default cha2bg"></button>
+				<div class="hp" id="hp2">HP
+				</div>
+			</div>
+		</div>
+		<div id="char3ct">
+			<div id="char3" class="col-lg-3">
+				<div class="chaName">Crid</div>
+				<button type="button" id="ch3"  class="btn btn-default cha3bg"></button>
+				<div class="hp" id="hp3">HP
+				</div>
+			</div>
+		</div>
+		<div id="char4ct">
+			<div id="char4" class="col-lg-3">
+				<div class="chaName">Pi</div>
+				<button type="button" id="ch4"  class="btn btn-default cha4bg"></button>
+				<div class="hp" id="hp4">HP
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" id="myChar">
+
+</div>
+<div class="row">
+	<button type="button" class="btn btn-danger attBtn col-lg-6">Attack</button>
+	<button type="button" class="btn btn-info rstBtn col-lg-6">Play again?</button>
+	</div>
+<div class="row" id="enChar">
+</div>
+<div class="row" id="ftChar">
+</div>
+
+
+		
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+var hp1 = 200;
+var hp2 = 120;
+var hp3 = 170;
+var hp4 = 150;
+var setUp = true;
+var setEn = false;
+var mycharHp = "";
+var enmyHp = "";
+var enmyAtt = "";
+var mycharAtt = "";
+var gameOn = false;
+var enmyDead = 0;
+
+
+$(".attBtn").prop('disabled', true);
+$(".rstBtn").prop('disabled', true);
+$("#hp1").html(hp1);
+$("#hp2").html(hp2);
+$("#hp3").html(hp3);
+$("#hp4").html(hp4);
+
+function reStart(){
+    window.location.reload();
+};
+
+function disbtnEnd() {
+	$(".attBtn").prop('disabled', true);
+	$("#ch1").prop('disabled', true);
+	$("#ch2").prop('disabled', true);
+	$("#ch3").prop('disabled', true);
+	$("#ch4").prop('disabled', true);
+};
+
+function dispkcharEnd() {
+	$(".pkenChar").prop('disabled', true);
+};
+
+if (gameOn === false) {
+	$("button").on("click", function() {
+		var chslted = "";
+		var krikAt = 30;
+		var novaAt = 60;
+		var cridAt = 45;
+		var piAtt = 40;
+
+		function charSel() {
+			var attChar = chslted.contents();
+			$("#myChar").append($(attChar));
+			$("#insT").html("Choose who you want to fight against!");    
+			};
+
+		function movAch() {
+			var attChar = $("#allCh").contents();
+			$("#enChar").append($(attChar));
+			}
+
+		function enSel() {
+			var deChar = chslted.contents();
+			$("#ftChar").append($(deChar));		
+			};
+	//Choosing your char to play with
+	    if (this.id === "ch1" && setUp === true) {
+			var chslted = $("#char1ct"); 	
+			charSel();		
+			movAch();
+			setUp = false;
+			mycharHp = hp1;
+			mycharAtt = krikAt;
+			$("#hp1").addClass("plycharHp")
+			}
+	    else if (this.id === "ch2" && setUp === true) {
+			var chslted = $("#char2ct");	
+			charSel();
+			movAch();
+			setUp = false;
+			mycharHp = hp2;
+			mycharAtt = novaAt;
+			$("#hp2").addClass("plycharHp")
+			}
+	    else if (this.id === "ch3" && setUp === true) {
+			var chslted = $("#char3ct");
+			charSel();
+			movAch();
+			setUp = false;
+			mycharHp = hp3;
+			mycharAtt = cridAt;
+			$("#hp3").addClass("plycharHp");
+			}
+	    else if (this.id === "ch4" && setUp === true) {	
+			var chslted = $("#char4ct");
+			charSel();
+			movAch();
+			setUp = false;
+			mycharHp = hp4;
+			mycharAtt = piAtt;
+			$("#hp4").addClass("plycharHp");
+			};
+	//enable attack button if condition is met.
+		if (setEn === false) {
+			$(".attBtn").prop('disabled', true);
+		}
+		else {
+			$(".attBtn").prop('disabled', false);
+		};
+
+	//change instruction header after condition is met
+		if (setEn === true) {
+			$("#insT").html("Fight!");
+		};
+
+	//Choosing enemy char to fight against
+		if (this.id === "ch1" && setUp === false) {
+			var chslted = $("#char1ct"); 		
+			enSel();
+			setEn = true;
+			enmyHp = hp1;
+			enmyAtt = krikAt;
+			$("#hp1").addClass("enemyHp");
+			$("#ch1").addClass("pkenChar");
+			};
+	   if (this.id === "ch2" && setUp === false) {
+			var chslted = $("#char2ct"); 		
+			enSel();
+			setEn = true;
+			enmyHp = hp2;
+			enmyAtt = novaAt;
+			$("#hp2").addClass("enemyHp");
+			$("#ch2").addClass("pkenChar");
+			};
+	    if (this.id === "ch3" && setUp === false) {
+			var chslted = $("#char3ct"); 		
+			enSel();
+			setEn = true;
+			enmyHp = hp3;
+			enmyAtt = cridAt;
+			$("#hp3").addClass("enemyHp");
+			$("#ch3").addClass("pkenChar");
+			};
+	   if (this.id === "ch4" && setUp === false) {	
+			var chslted = $("#char4ct"); 	
+			enSel();
+			setEn = true;
+			enmyHp = hp4;
+			enmyAtt = piAtt;
+			$("#hp4").addClass("enemyHp");
+			$("#ch4").addClass("pkenChar");
+			};
+	});
+
+};
+
+//what happens when attbtn is clicked
+
+
+$(".attBtn").on("click" , function() {
+	gameOn = true;
+
+	var hitmycharHp = mycharHp;
+	var hitenmyHp = enmyHp;
+	 
+	enmyAttnw = Math.floor(Math.random()*enmyAtt)+5;
+	mycharAttnw = Math.floor(Math.random()*mycharAtt)+50;
+
+	mycharHp = hitmycharHp - enmyAttnw;
+	enmyHp = hitenmyHp - mycharAttnw;
+
+	$(".dmgText").html("You hit the enemy for " + mycharAttnw + "!  and  " + "Enemy hit you for " + enmyAttnw + "!");
+	$(".enemyHp").html(enmyHp);
+	$(".plycharHp").html(mycharHp);	
+
+	if (mycharHp < 1) {
+		$("#insT").html("<h1>GAME OVER! YOU LOSE!</h1>");
+		$(".dmgText").html("You Died")
+		disbtnEnd();
+		$(".rstBtn").prop('disabled', false);
+	};
+
+	if (enmyHp < 1) {
+		dispkcharEnd();
+		$("#hp1").removeClass("enemyHp");
+		$("#hp2").removeClass("enemyHp");
+		$("#hp3").removeClass("enemyHp");
+		$("#hp4").removeClass("enemyHp");
+		$("#insT").html("<h1>Pick next opponent!</h1>");
+		gameOn = false;
+		$(".attBtn").prop('disabled', true);
+		$(".dmgText").html("You defeated the enemy!")
+		enmyDead++;	
+	};
+
+	if (enmyDead === 3) {
+		$("#insT").html("<h1>YOU WIN!</h1>");
+		disbtnEnd();
+		$(".rstBtn").prop('disabled', false);
+	};
+
+
+})
+
+$(".rstBtn").on("click" , function() {
+	reStart();
+});
+
+
+
+
+})
+</script>
+
+
+
+
+</body>
+</html>
